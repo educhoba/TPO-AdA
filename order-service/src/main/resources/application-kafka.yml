@@ -1,0 +1,14 @@
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.uade.order.domain.event,com.uade.inventory.domain.event"
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.uade.order.domain.event.ProductCreatedEvent

@@ -1,0 +1,112 @@
+### Variables
+@gatewayUrl = http://localhost:8080
+@inventoryUrl = http://localhost:8082
+@authUrl = http://localhost:8083
+
+### ===================================================
+### AUTH SERVICE
+### ===================================================
+
+### Login como admin → copiá el token en @token
+POST {{gatewayUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+###
+
+### Login como user
+POST {{gatewayUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user123"
+}
+
+###
+
+### ===================================================
+### INVENTORY SERVICE — vía API Gateway (con JWT)
+### ===================================================
+
+@token = Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc4MTEzMjYwOCwiZXhwIjoxNzgxMTM2MjA4fQ.Lat7X8uOwT5hwgftrRSS356g8CQbCQArQ_Xz1npq7V5G_6yK2nmdKjmuMpRxhyw
+### Obtener todos los productos
+GET {{gatewayUrl}}/api/inventory/products
+Authorization: {{token}}
+
+###
+
+### Obtener producto por ID
+GET {{gatewayUrl}}/api/inventory/products/1
+Authorization: {{token}}
+
+###
+
+### Crear producto
+POST {{gatewayUrl}}/api/inventory/products
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "Producto Test 1",
+  "quantity": 11,
+  "price": 99.99
+}
+
+###
+
+### ===================================================
+### INVENTORY SERVICE — acceso directo (sin gateway)
+### ===================================================
+
+### Obtener todos los productos (directo)
+GET {{inventoryUrl}}/api/inventory/products
+Authorization: {{token}}
+
+###
+
+### Obtener producto por ID (directo)
+GET {{inventoryUrl}}/api/inventory/products/1
+Authorization: {{token}}
+
+###
+
+### Crear producto (directo)
+POST {{inventoryUrl}}/api/inventory/products
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "Producto Directo",
+  "quantity": 5,
+  "price": 49.99
+}
+
+###
+
+### ===================================================
+### HEALTH CHECKS
+### ===================================================
+
+### Eureka
+GET http://localhost:8761/actuator/health
+
+###
+
+### Config Server
+GET http://localhost:8888/actuator/health
+
+###
+
+### Inventory Service
+GET {{inventoryUrl}}/actuator/health
+
+###
+
+### H2 Console (inventory-service)
+### Abrí en el browser: http://localhost:8082/h2-console
+### JDBC URL: jdbc:h2:mem:inventorydb  |  User: sa  |  Password: (vacío)

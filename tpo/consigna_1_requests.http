@@ -1,0 +1,89 @@
+### Variables
+@gatewayUrl = http://localhost:8080
+@orderUrl = http://localhost:8085
+
+### ===================================================
+### 1. LOGIN
+### ===================================================
+
+### Login como admin para obtener el token JWT
+# Pega el valor del campo "token" obtenido aquí en la variable @token de abajo
+POST {{gatewayUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+###
+
+### ===================================================
+### 2. CONFIGURACIÓN DEL TOKEN DE PRUEBA
+### ===================================================
+@token = Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwiaWF0IjoxNzgxMTI5MTUzLCJleHAiOjE3ODExMzI3NTN9.TltDE2zF8ZuAL85ihM2q1a9Dp1xb1t3ZOmuvawDNBnyVr6-yOtjejivyxQ7x9n9J
+### 3. PROBAR SEGURIDAD EN ORDER-SERVICE (Acceso sin token debe fallar)
+### ===================================================
+
+### Listar ordenes sin token (Debe responder 401 Unauthorized)
+GET {{gatewayUrl}}/api/orders
+
+###
+
+### ===================================================
+### 4. ORDER SERVICE — vía API Gateway (con JWT)
+### ===================================================
+
+### Crear una orden (Publica evento OrderCreatedEvent)
+POST {{gatewayUrl}}/api/orders
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "productName": "Teclado Mecánico RGB",
+  "quantity": 2,
+  "price": 120.0
+}
+
+###
+
+### Listar todas las ordenes (Debe mostrar la orden creada)
+GET {{gatewayUrl}}/api/orders
+Authorization: {{token}}
+
+###
+
+### Obtener orden por ID
+GET {{gatewayUrl}}/api/orders/1
+Authorization: {{token}}
+
+###
+
+### ===================================================
+### 5. PROBAR EVENTO PRODUCT-CREATED (inventory-service -> order-service)
+### ===================================================
+
+### Crear un producto en Inventory Service
+# Al ejecutar esto, inventory-service publicará un evento ProductCreated
+# que order-service debe consumir y registrar en sus logs.
+POST {{gatewayUrl}}/api/inventory/products
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "Mouse Inalámbrico Pro",
+  "quantity": 50,
+  "price": 85.0
+}
+
+###
+
+### ===================================================
+### 6. HEALTH CHECKS & ACTUATOR
+### ===================================================
+
+### Health Check de Order Service directo
+GET {{orderUrl}}/actuator/health
+
+### Health Check de Order Service vía Gateway
+GET {{gatewayUrl}}/actuator/health

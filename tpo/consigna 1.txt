@@ -1,0 +1,35 @@
+Objetivo: 
+Extender el ecosistema de microservicios provisto agregando un nuevo servicio  simple y demostrando su integración arquitectónica mediante un PoC.
+Alcance Mínimo 
+
+- Clonar y ejecutar el ecosistema base con perfil rabbitmq. 
+
+- Crear un microservicio nuevo (p. ej. order-service) con 2 endpoints. 
+
+- Integrarlo a Eureka y API Gateway. 
+
+- Asegurar endpoints con JWT del auth-service. 
+
+- Publicar un evento y consumirlo desde notification-service o uno nuevo. 
+
+- Demostrar flujo en Zipkin y logs con traceId (si activan ELK).
+
+El nuevo microservicio debe: 
+• Registrarse en Eureka 
+• Exponer 1 endpoint REST 
+• Consumir 1 evento 
+• Publicar 1 evento 
+• Tener 1 entidad persistida 
+
+
+Niveles de arquitectura obligatorio (TP)  carga manual 
+• config-server 
+• eureka 
+• gateway 
+• auth 
+• inventory 
+• notification 
+• RabbitMQ
+
+Necesito un PoC funcionando
+Crear tests/requests http para validar los microservicios
