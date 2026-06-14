@@ -14,11 +14,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/eureka/**", "/actuator/**").permitAll()
-                .anyRequest().authenticated()
-            );
+                .csrf(AbstractHttpConfigurer::disable) // Good, this fixes registration issues
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/eureka/**", "/actuator/**").permitAll() // Added "/"
+                        .anyRequest().authenticated())
+                .httpBasic(org.springframework.security.config.Customizer.withDefaults()); // Keeps basic auth active
+                                                                                           // for other paths
 
         return http.build();
     }
