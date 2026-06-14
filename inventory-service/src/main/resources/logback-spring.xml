@@ -4,7 +4,7 @@
 <springProperty
     scope="context"
     name="appName"
-    source="spring.application.name"/>F
+    source="spring.application.name"/>
     <!-- ── Appender: consola con traceId/spanId ──────────────────────────── -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
