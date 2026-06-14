@@ -13,7 +13,7 @@ public class KafkaProductEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaProductEventListener.class);
 
-    @KafkaListener(topics = "product-created", groupId = "notification-group")
+    @KafkaListener(topics = "product-created", groupId = "notification-group", containerFactory = "kafkaListenerContainerFactory")
     public void handleProductCreated(ProductCreatedEvent event) {
         log.info("=== NOTIFICACIÓN RECIBIDA (Kafka) ===");
         log.info("Nuevo producto creado:");
