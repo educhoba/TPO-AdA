@@ -15,7 +15,7 @@ public class ProductEventListener {
 
     @RabbitListener(queues = "product.created.queue")
     public void handleProductCreated(ProductCreatedEvent event) {
-        log.info("=== NOTIFICACIÓN RECIBIDA ===");
+        log.info("=== NOTIFICACIÓN RECIBIDA (Rabbit)===");
         log.info("Nuevo producto creado:");
         log.info("  ID:       {}", event.getProductId());
         log.info("  Nombre:   {}", event.getName());

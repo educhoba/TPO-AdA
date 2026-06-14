@@ -34,19 +34,23 @@ El método más simple en cualquier sistema operativo es **Docker**. La instalac
 
 El proyecto ya usa la imagen **Bitnami Kafka** en modo KRaft. Para levantar Kafka localmente de forma aislada, el comando equivalente es:
 
-```bash
-docker run -d --name kafka \
-  -p 9092:9092 \
-  -e KAFKA_CFG_NODE_ID=1 \
-  -e KAFKA_CFG_PROCESS_ROLES=broker,controller \
-  -e KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093 \
-  -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093 \
-  -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 \
-  -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT \
-  -e KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER \
-  -e KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true \
-  bitnami/kafka:latest
-```
+
+''' bitnami ya no es un repo en los nuevos de repos de docker, hay que buscarlo en los legacy:
+
+docker run -d --name kafka `
+  -p 9092:9092 `
+  -e KAFKA_CFG_NODE_ID=1 `
+  -e KAFKA_CFG_PROCESS_ROLES=broker,controller `
+  -e KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:9093 `
+  -e KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093 `
+  -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092 `
+  -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT `
+  -e KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER `
+  -e KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true `
+  bitnamilegacy/kafka:3.7.0
+
+  '''
+
 
 > **⚠️ Atención `ADVERTISED_LISTENERS`:** cuando los microservicios corren fuera de Docker (ejecución manual con `mvn spring-boot:run`), el valor debe ser `PLAINTEXT://localhost:9092`. En el `docker-compose.yml` del proyecto el valor es `PLAINTEXT://kafka:9092` porque allí los contenedores se ven por nombre de servicio — esa configuración **no sirve** para el arranque manual.
 
